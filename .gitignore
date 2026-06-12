@@ -1,0 +1,36 @@
+# --- VS Code specific ---
+.vscode/
+
+# --- Python Virtual Environments ---
+.env
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# --- Compiled Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# --- Data Science / Notebooks ---
+.ipynb_checkpoints/
+*.log
+*.sqlite3
+*.csv
+!dataset/*.csv
+
+# --- System/OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Project/Build Artifacts ---
+models/*.json
+models/*.pkl
+*.joblib
+build/
+dist/
+*.egg-info/
