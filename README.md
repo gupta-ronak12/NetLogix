@@ -1,42 +1,258 @@
-Netlogix: Hybrid Log Classification Framework
-This project provides a robust, modular hybrid log classification system. It is designed to intelligently categorize log messages by utilizing a tiered approach that combines pattern-based rules, machine learning, and generative AI. This ensures high accuracy for common patterns and reliable fallbacks for complex or unknown data.
+# 🚀 NetLogix: Hybrid Log Classification Framework
 
-Classification Architecture
-Our system processes each log message through a structured decision pipeline:
+## 📖 Overview
 
-Regex Classification: The first layer for high-speed, deterministic classification of predictable and well-defined log patterns.
+**NetLogix** is a robust and modular hybrid log classification system designed to intelligently categorize log messages using a multi-layered classification architecture.
 
-BERT-based Classification: For more complex log entries, the system utilizes Sentence Transformer embeddings combined with a trained Logistic Regression model. This layer is ideal for patterns that require semantic understanding and have historical training data.
+The framework combines:
 
-LLM-based Fallback: For logs that cannot be classified by the first two methods, the system leverages a Large Language Model (via the Groq API) to perform context-aware classification. This ensures that even unique or previously unseen logs are handled effectively.
+* Rule-based pattern matching
+* Machine Learning-based semantic classification
+* Large Language Model (LLM) reasoning
 
-Project Structure
-models/: Stores the serialized .joblib model files used for the BERT-based classification layer.
+This hybrid approach ensures high accuracy, scalability, and reliability when handling both structured and previously unseen log data.
 
-resources/: Houses supporting files, including sample datasets, CSV outputs, and documentation assets.
+---
 
-training/: Contains the Jupyter notebooks and scripts used to train and evaluate the machine learning components.
+# 🏗️ Classification Architecture
 
-Root Directory: Contains the core logic, including the FastAPI server (server.py), modular processing scripts (processor_llm.py, bert_model_processor.py), and environment configurations.
+Each log message passes through a tiered decision pipeline:
 
-Setup & Deployment
-To run this project on your local machine, ensure you have Python installed, then follow these steps:
+## 1️⃣ Regex Classification
 
-Environment Setup: Create and activate a virtual environment to manage your dependencies.
+The first layer performs high-speed deterministic classification using predefined regular expression patterns.
 
-Install Requirements: Install the necessary libraries:
+### Benefits
+
+* Extremely fast execution
+* High precision for known log formats
+* Low computational cost
+
+---
+
+## 2️⃣ BERT-Based Classification
+
+For logs that cannot be classified through regex patterns, the framework uses:
+
+* Sentence Transformer embeddings
+* Logistic Regression classifier
+
+This layer provides semantic understanding of log messages and is effective when historical training data is available.
+
+### Benefits
+
+* Context-aware classification
+* Handles variations in wording
+* Improves accuracy for semi-structured logs
+
+---
+
+## 3️⃣ LLM-Based Fallback Classification
+
+If the first two layers fail to confidently classify a log message, NetLogix leverages a Large Language Model through the **Groq API**.
+
+The LLM performs context-aware reasoning to classify unknown or previously unseen log entries.
+
+### Benefits
+
+* Handles edge cases
+* Supports unseen patterns
+* Provides intelligent fallback classification
+
+---
+
+# 📂 Project Structure
+
+```text
+NetLogix/
+│
+├── models/
+│   ├── *.joblib
+│   └── Trained ML models
+│
+├── resources/
+│   ├── Sample datasets
+│   ├── CSV outputs
+│   └── Documentation assets
+│
+├── training/
+│   ├── Jupyter notebooks
+│   └── Model training scripts
+│
+├── server.py
+├── processor_llm.py
+├── bert_model_processor.py
+├── requirements.txt
+├── .env
+└── README.md
+```
+
+### Directory Description
+
+| Folder/File               | Purpose                                              |
+| ------------------------- | ---------------------------------------------------- |
+| `models/`                 | Stores serialized machine learning models            |
+| `resources/`              | Contains datasets, outputs, and supporting resources |
+| `training/`               | Training and evaluation notebooks/scripts            |
+| `server.py`               | FastAPI application entry point                      |
+| `processor_llm.py`        | LLM classification module                            |
+| `bert_model_processor.py` | BERT-based classification module                     |
+
+---
+
+# ⚙️ Setup & Installation
+
+## Prerequisites
+
+* Python 3.10+
+* Pip
+* Groq API Key
+
+---
+
+## Step 1: Clone the Repository
+
+```bash
+git clone <repository-url>
+cd NetLogix
+```
+
+---
+
+## Step 2: Create Virtual Environment
+
+### Windows
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+---
+
+## Step 3: Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-Configure API Keys: Create a .env file in the root directory and add your GROQ_API_KEY to enable the LLM classification layer. Ensure your .env file is included in your .gitignore to keep your credentials secure.
+---
 
-Launch the Server: Start the API server:
+## Step 4: Configure Environment Variables
+
+Create a `.env` file in the project root directory.
+
+```env
+GROQ_API_KEY=your_api_key_here
+```
+
+### Security Note
+
+Always add `.env` to `.gitignore` to prevent exposing sensitive credentials.
+
+```gitignore
+.env
+```
+
+---
+
+# Running the Application
+
+Start the FastAPI server:
+
+```bash
 python server.py
+```
 
-Access the API:
+---
 
-Main endpoint: http://127.0.0.1:8000/
+# 🌐 API Endpoints
 
-Interactive API docs: http://127.0.0.1:8000/docs
+### Main Endpoint
 
-Usage
-The system is designed to accept CSV uploads containing source and log_message columns. The API will process the logs through the hybrid framework and return a new CSV file containing the original data with an appended target_label column.
+```text
+http://127.0.0.1:8000/
+```
+
+### Interactive Swagger Documentation
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# 📊 Usage
+
+The system accepts CSV uploads containing the following columns:
+
+| Column        | Description       |
+| ------------- | ----------------- |
+| `source`      | Source of the log |
+| `log_message` | Raw log message   |
+
+### Processing Flow
+
+* Upload CSV file
+* Logs pass through Regex Classification
+* Unclassified logs move to BERT Classification
+* Remaining logs are handled by the LLM Fallback Layer
+* Output CSV is generated
+
+### Output
+
+The returned CSV contains:
+
+* Original columns
+* Predicted classification label
+
+Additional column:
+
+```text
+target_label
+```
+
+---
+
+# ✨ Key Features
+
+* Hybrid multi-layer log classification
+* Regex-based fast pattern matching
+* BERT semantic understanding
+* LLM-powered intelligent fallback
+* FastAPI integration
+* CSV upload and processing support
+* Modular and scalable architecture
+* Easy deployment and extensibility
+
+---
+
+# 🛠️ Technology Stack
+
+* Python
+* FastAPI
+* Sentence Transformers
+* Scikit-Learn
+* Logistic Regression
+* Regular Expressions (Regex)
+* Groq API
+* Pandas
+* Joblib
+
+---
+
+# 📈 Future Enhancements
+
+* Confidence score reporting
+* Real-time log stream processing
+* Model retraining pipeline
+* Dashboard for classification analytics
+* Multi-language log support
+
